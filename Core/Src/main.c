@@ -36,13 +36,10 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define KEY_A 0x04 // Keyboard 1 and !
-#define KEY_S 0x16 // Keyboard 2 and @
-#define KEY_D 0x07 // Keyboard 3 and #
-#define KEY_W 0x1a // Keyboard 4 and $
 
-#define ROWS 2
-#define COLS 2
+
+#define ROWS 5
+#define COLS 7
 
 /* USER CODE END PD */
 
@@ -82,19 +79,36 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	colrow COL[2] = {
+	colrow COL[COLS] = {
+			{COL0_GPIO_Port, COL0_Pin},
+			{COL1_GPIO_Port, COL1_Pin},
+			{COL2_GPIO_Port, COL2_Pin},
+			{COL3_GPIO_Port, COL3_Pin},
+			{COL4_GPIO_Port, COL4_Pin},
+			{COL5_GPIO_Port, COL5_Pin},
 			{COL6_GPIO_Port, COL6_Pin},
-			{COL5_GPIO_Port, COL5_Pin}
 	};
 
-	colrow ROW[2] = {
+	colrow ROW[ROWS] = {
 			{ROW0_GPIO_Port, ROW0_Pin},
-			{ROW1_GPIO_Port, ROW1_Pin}
+			{ROW1_GPIO_Port, ROW1_Pin},
+			{ROW2_GPIO_Port, ROW2_Pin},
+			{ROW3_GPIO_Port, ROW3_Pin},
+			{ROW4_GPIO_Port, ROW4_Pin},
 	};
 
-	uint8_t keyMap[2][2] = {
-			{KEY_A, KEY_S},
-			{KEY_D, KEY_W}
+//	uint8_t keyMap[2][2] = {
+//			{KEY_A, KEY_S},
+//			{KEY_D, KEY_W}
+//	};
+
+	uint8_t keyMap[ROWS][COLS] = {
+			{KC_ESC, HU_0, KC_1, KC_2, KC_3, KC_4, KC_5},
+			{KC_CAPSLOCK, KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T},
+			{KC_LEFTMETA, KC_LEFTSHIFT, KC_A, KC_S, KC_D, KC_F, KC_G},
+			{KC_LEFTCTRL, HU_IACU, HU_Y, KC_X, KC_C, KC_V, KC_B},
+			{KC_NONE, KC_NONE, KC_NONE, KC_MEDIA_PLAYPAUSE, KC_LEFTALT, KC_SPACE, KC_NONE},
+
 	};
 
   /* USER CODE END 1 */
@@ -307,7 +321,9 @@ int main(void)
 	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
 
 
-
+	  // TODOs: modifier keys, media keys (custom or composite HID class needed?
+	  // 		UART connection and communication between sides (half duplex)
+	  // 		Encoder, OLED, trackball
 
 
 
