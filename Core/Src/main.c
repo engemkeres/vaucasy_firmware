@@ -68,8 +68,11 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+	// 2x2 clusterrel kiolvasas teszt
+
+
   /* USER CODE END 1 */
-  
+
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -90,8 +93,8 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_I2C3_Init();
-  MX_USART2_UART_Init();
   MX_USB_DEVICE_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   extern USBD_HandleTypeDef hUsbDeviceFS;
   uint8_t HID_buffer[8] = {0};
@@ -103,20 +106,38 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-
     /* USER CODE BEGIN 3 */
 
-	  HID_buffer[0] = 2; //left shift down
-	  HID_buffer[3] = 7; // d down
-	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
+//	  HID_buffer[0] = 2; //left shift down
+//	  HID_buffer[3] = 7; // d down
+//	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
+//
+//	  HAL_Delay(20);
+//
+//	  HID_buffer[0] = 0; //left shift up
+//	  HID_buffer[3] = 0; // d up
+//	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
+//
+//	  HAL_Delay(2000);
 
-	  HAL_Delay(20);
+	  //COL6 es ROW0 a sarki billentyu
+//	  HAL_GPIO_WritePin(COL6_GPIO_Port, COL6_Pin, GPIO_PIN_SET);
+//	  if( HAL_GPIO_ReadPin(ROW0_GPIO_Port, ROW0_Pin) == GPIO_PIN_SET ) {
+//
+//	  	  HID_buffer[0] = 2; //left shift down
+//	  	  HID_buffer[3] = 7; // d down
+//	  	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
+//
+//	  	  HAL_Delay(20);
+//
+//	  	  HID_buffer[0] = 0; //left shift up
+//	  	  HID_buffer[3] = 0; // d up
+//	  	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
+//
+//	  	  HAL_Delay(200);
+//	  }
 
-	  HID_buffer[0] = 0; //left shift up
-	  HID_buffer[3] = 0; // d up
-	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
 
-	  HAL_Delay(2000);
 
   }
   /* USER CODE END 3 */
