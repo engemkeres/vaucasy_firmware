@@ -36,10 +36,10 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define KEY_1 0x1e // Keyboard 1 and !
-#define KEY_2 0x1f // Keyboard 2 and @
-#define KEY_3 0x20 // Keyboard 3 and #
-#define KEY_4 0x21 // Keyboard 4 and $
+#define KEY_A 0x04 // Keyboard 1 and !
+#define KEY_S 0x16 // Keyboard 2 and @
+#define KEY_D 0x07 // Keyboard 3 and #
+#define KEY_W 0x1a // Keyboard 4 and $
 
 #define ROWS 2
 #define COLS 2
@@ -93,8 +93,8 @@ int main(void)
 	};
 
 	uint8_t keyMap[2][2] = {
-			{KEY_1, KEY_2},
-			{KEY_3, KEY_4}
+			{KEY_A, KEY_S},
+			{KEY_D, KEY_W}
 	};
 
   /* USER CODE END 1 */
@@ -127,10 +127,8 @@ int main(void)
   extern USBD_HandleTypeDef hUsbDeviceFS;
   uint8_t keyState[ROWS][COLS] = {0};  // Keeps track of the current state of each key
   uint8_t HID_buffer[8] = {0};         // USB HID report buffer
-  uint8_t previousHIDBuffer[8] = {0};  // To detect changes
   uint32_t keyTimers[ROWS][COLS] = {0}; // Key debounce and repeat timers
   const uint32_t debounceDelay = 5;    // Debounce delay in ms
-  const uint32_t repeatDelay = 50;     // Repeat delay for held keys in ms
 
   /* USER CODE END 2 */
 
@@ -278,50 +276,6 @@ int main(void)
 			  HAL_GPIO_WritePin(COL[c].GPIO_PORT, COL[c].GPIO_PIN, (c == i) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 		  }
 
-		  HAL_Delay(5); // Allow signal to stabilize
-
-		  // Check rows for pressed keys
-		  for (uint8_t j = 0; j < ROWS; j++) {
-			  uint8_t isPressed = HAL_GPIO_ReadPin(ROW[j].GPIO_PORT, ROW[j].GPIO_PIN) == GPIO_PIN_SET;
-
-			  if (isPressed) {
-				  uint32_t currentTime = HAL_GetTick();
-
-				  // Handle key press or hold
-				  if (keyState[j][i] == 0 || (currentTime - keyTimers[j][i] >= repeatDelay)) {
-					  if (keyIndex < 8) {
-						  HID_buffer[keyIndex++] = keyMap[j][i]; // Add keycode to HID buffer
-					  }
-					  keyTimers[j][i] = currentTime; // Reset timer for repeat
-					  keyState[j][i] = 1; // Mark key as pressed
-				  }
-			  } else {
-				  keyState[j][i] = 0; // Mark key as released
-			  }
-		  }
-
-		  HAL_Delay(5); // Small delay before switching columns
-	  }
-
-	  // Send HID report if there's a change or for held keys
-	  if (memcmp(HID_buffer, previousHIDBuffer, 8) != 0 || keyIndex > 2) {
-		  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
-		  memcpy(previousHIDBuffer, HID_buffer, 8); // Update previous buffer
-	  }
-
-
-	  //--------------------- version 5 -----------------------
-
-
-	  uint8_t keyIndex = 2; // Start filling keycodes from HID_buffer[2]
-	  memset(HID_buffer + 2, 0, 6); // Clear keycode slots
-
-	  for (uint8_t i = 0; i < COLS; i++) {
-		  // Activate only the current column
-		  for (uint8_t c = 0; c < COLS; c++) {
-			  HAL_GPIO_WritePin(COL[c].GPIO_PORT, COL[c].GPIO_PIN, (c == i) ? GPIO_PIN_SET : GPIO_PIN_RESET);
-		  }
-
 		  HAL_Delay(1); // Allow signal to stabilize
 
 		  // Check rows for pressed keys
@@ -329,18 +283,17 @@ int main(void)
 			  uint8_t isPressed = HAL_GPIO_ReadPin(ROW[j].GPIO_PORT, ROW[j].GPIO_PIN) == GPIO_PIN_SET;
 			  uint32_t currentTime = HAL_GetTick();
 
-			  // Handle key press
 			  if (isPressed) {
-				  if (keyState[j][i] == 0 && (currentTime - keyTimers[j][i] >= debounceDelay)) {
-					  // First valid press or repeat
+				  // Handle key press or hold
+				  if ( ( keyState[j][i] == 0 && (currentTime - keyTimers[j][i] >= debounceDelay) ) || (keyState[j][i] == 1 )) { // It it is not pressed yet, or it is held down
 					  if (keyIndex < 8) {
 						  HID_buffer[keyIndex++] = keyMap[j][i]; // Add keycode to HID buffer
 					  }
-					  keyTimers[j][i] = currentTime; // Reset timer
-					  keyState[j][i] = 1; // Mark as pressed
+					  keyTimers[j][i] = currentTime; // Reset timer for repeat
+					  keyState[j][i] = 1; // Mark key as pressed
 				  }
-			  } else {
-				  // Handle key release
+			  }
+			  else {
 				  if (keyState[j][i] == 1 && (currentTime - keyTimers[j][i] >= debounceDelay)) {
 					  keyState[j][i] = 0; // Mark as released
 					  keyTimers[j][i] = currentTime; // Reset timer
@@ -348,14 +301,12 @@ int main(void)
 			  }
 		  }
 
-		  HAL_Delay(5); // Small delay before switching columns
+		  HAL_Delay(1); // Small delay before switching columns
 	  }
 
-	  // Send HID report if there's a change or for held keys
-	  if (memcmp(HID_buffer, previousHIDBuffer, 8) != 0 || keyIndex > 2) {
-		  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
-		  memcpy(previousHIDBuffer, HID_buffer, 8); // Update previous buffer
-	  }
+	  USBD_HID_SendReport(&hUsbDeviceFS, HID_buffer, 8);
+
+
 
 
 
