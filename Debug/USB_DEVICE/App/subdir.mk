@@ -6,14 +6,17 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../USB_DEVICE/App/usb_device.c \
+../USB_DEVICE/App/usbd_composite_builder.c \
 ../USB_DEVICE/App/usbd_desc.c 
 
 OBJS += \
 ./USB_DEVICE/App/usb_device.o \
+./USB_DEVICE/App/usbd_composite_builder.o \
 ./USB_DEVICE/App/usbd_desc.o 
 
 C_DEPS += \
 ./USB_DEVICE/App/usb_device.d \
+./USB_DEVICE/App/usbd_composite_builder.d \
 ./USB_DEVICE/App/usbd_desc.d 
 
 
@@ -24,7 +27,7 @@ USB_DEVICE/App/%.o USB_DEVICE/App/%.su USB_DEVICE/App/%.cyclo: ../USB_DEVICE/App
 clean: clean-USB_DEVICE-2f-App
 
 clean-USB_DEVICE-2f-App:
-	-$(RM) ./USB_DEVICE/App/usb_device.cyclo ./USB_DEVICE/App/usb_device.d ./USB_DEVICE/App/usb_device.o ./USB_DEVICE/App/usb_device.su ./USB_DEVICE/App/usbd_desc.cyclo ./USB_DEVICE/App/usbd_desc.d ./USB_DEVICE/App/usbd_desc.o ./USB_DEVICE/App/usbd_desc.su
+	-$(RM) ./USB_DEVICE/App/usb_device.cyclo ./USB_DEVICE/App/usb_device.d ./USB_DEVICE/App/usb_device.o ./USB_DEVICE/App/usb_device.su ./USB_DEVICE/App/usbd_composite_builder.cyclo ./USB_DEVICE/App/usbd_composite_builder.d ./USB_DEVICE/App/usbd_composite_builder.o ./USB_DEVICE/App/usbd_composite_builder.su ./USB_DEVICE/App/usbd_desc.cyclo ./USB_DEVICE/App/usbd_desc.d ./USB_DEVICE/App/usbd_desc.o ./USB_DEVICE/App/usbd_desc.su
 
 .PHONY: clean-USB_DEVICE-2f-App
 

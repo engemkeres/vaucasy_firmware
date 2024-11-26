@@ -64,6 +64,18 @@ void MX_USB_DEVICE_Init(void)
 {
   /* USER CODE BEGIN USB_DEVICE_Init_PreTreatment */
 
+    // Initialize the Device Library, add supported class and start the library
+    USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
+
+    // Register the HID class
+    USBD_RegisterClass(&hUsbDeviceFS, USBD_CUSTOM_HID_CLASS);
+
+    // Register the custom HID interface
+    USBD_CUSTOM_HID_RegisterInterface(&hUsbDeviceFS, &USBD_CustomHID_fops_FS);
+
+    // Start the USB device
+    USBD_Start(&hUsbDeviceFS);
+
   /* USER CODE END USB_DEVICE_Init_PreTreatment */
 
   /* Init Device Library, add supported class and start the library. */

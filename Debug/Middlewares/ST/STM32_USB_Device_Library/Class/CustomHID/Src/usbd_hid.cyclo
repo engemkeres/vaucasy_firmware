@@ -1,0 +1,6 @@
+../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_hid.c:273:16:USBD_HID_Init	3
+../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_hid.c:320:16:USBD_HID_DeInit	2
+../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_hid.c:351:16:USBD_HID_Setup	18
+../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_hid.c:479:9:USBD_HID_SendReport	4
+../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_hid.c:516:10:USBD_HID_GetPollingInterval	2
+../Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src/usbd_hid.c:607:16:USBD_HID_DataIn	1
